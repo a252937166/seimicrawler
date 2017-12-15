@@ -1,10 +1,10 @@
 package com.ouyang.crawlers;
 
 import com.ouyang.model.BlogContent;
-import cn.wanghaomiao.seimi.annotation.Crawler;
-import cn.wanghaomiao.seimi.struct.Request;
-import cn.wanghaomiao.seimi.struct.Response;
-import cn.wanghaomiao.seimi.def.BaseSeimiCrawler;
+import com.ouyang.annotation.Crawler;
+import com.ouyang.struct.Request;
+import com.ouyang.struct.Response;
+import com.ouyang.def.BaseSeimiCrawler;
 import cn.wanghaomiao.xpath.model.JXDocument;
 
 import java.util.List;

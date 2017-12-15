@@ -1,6 +1,7 @@
 package com.ouyang.main;
 
-import cn.wanghaomiao.seimi.core.Seimi;
+
+import com.ouyang.core.Seimi;
 
 /**
  * @author 汪浩淼 [et.tw@163.com]
@@ -9,6 +10,6 @@ import cn.wanghaomiao.seimi.core.Seimi;
 public class Boot {
     public static void main(String[] args){
         Seimi s = new Seimi();
-        s.goRun("basic");
+        s.goRun("mybatis");
     }
 }

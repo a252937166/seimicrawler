@@ -1,8 +1,8 @@
 package com.ouyang.queues;
 
-import cn.wanghaomiao.seimi.annotation.Queue;
-import cn.wanghaomiao.seimi.struct.Request;
-import cn.wanghaomiao.seimi.core.SeimiQueue;
+import com.ouyang.annotation.Queue;
+import com.ouyang.struct.Request;
+import com.ouyang.core.SeimiQueue;
 import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

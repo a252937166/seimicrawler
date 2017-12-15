@@ -1,10 +1,10 @@
 package com.ouyang.crawlers;
 
-import cn.wanghaomiao.seimi.annotation.Crawler;
-import cn.wanghaomiao.seimi.def.BaseSeimiCrawler;
-import cn.wanghaomiao.seimi.http.HttpMethod;
-import cn.wanghaomiao.seimi.struct.Request;
-import cn.wanghaomiao.seimi.struct.Response;
+import com.ouyang.annotation.Crawler;
+import com.ouyang.def.BaseSeimiCrawler;
+import com.ouyang.http.HttpMethod;
+import com.ouyang.struct.Request;
+import com.ouyang.struct.Response;
 import cn.wanghaomiao.xpath.exception.XpathSyntaxErrorException;
 import cn.wanghaomiao.xpath.model.JXDocument;
 import org.apache.commons.lang3.StringUtils;

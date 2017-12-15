@@ -18,9 +18,14 @@
     </bean>
     <bean id="seimiSqlSessionFactory" parent="sqlSessionFactory">
         <property name="dataSource" ref="mybatisDataSource"/>
+        <property name="mapperLocations">
+            <list>
+                <value>classpath:mapper/*.xml</value>
+            </list>
+        </property>
     </bean>
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="cn.wanghaomiao.dao.mybatis"/>
+        <property name="basePackage" value="com.ouyang.dao"/>
         <property name="sqlSessionFactoryBeanName" value="seimiSqlSessionFactory"/>
     </bean>
 </beans>

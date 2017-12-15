@@ -16,3 +16,5 @@ target
 ChangeLog.md
 LICENSE
 README.md
+seimi.properties
+demo/src/main/resources/mapper/

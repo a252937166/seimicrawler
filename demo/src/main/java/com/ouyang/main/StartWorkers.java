@@ -1,6 +1,6 @@
 package com.ouyang.main;
 
-import cn.wanghaomiao.seimi.core.Seimi;
+import com.ouyang.core.Seimi;
 
 /**
  * @author 汪浩淼 [et.tw@163.com]
