@@ -1,9 +1,9 @@
 package com.ouyang.interceptors;
 
 import com.ouyang.annotations.DoLog;
-import com.ouyang.annotation.Interceptor;
-import com.ouyang.core.SeimiInterceptor;
-import com.ouyang.struct.Response;
+import cn.wanghaomiao.seimi.annotation.Interceptor;
+import cn.wanghaomiao.seimi.core.SeimiInterceptor;
+import cn.wanghaomiao.seimi.struct.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

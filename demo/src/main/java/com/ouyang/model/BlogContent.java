@@ -1,6 +1,6 @@
 package com.ouyang.model;
 
-import com.ouyang.annotation.Xpath;
+import cn.wanghaomiao.seimi.annotation.Xpath;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
