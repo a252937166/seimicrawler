@@ -5,12 +5,19 @@ import cn.wanghaomiao.seimi.def.BaseSeimiCrawler;
 import cn.wanghaomiao.seimi.struct.Request;
 import cn.wanghaomiao.seimi.struct.Response;
 import cn.wanghaomiao.xpath.model.JXDocument;
+import com.ouyang.util.HttpUtil;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Value;
 
+import javax.naming.ldap.PagedResultsControl;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Crawler(name = "manhua",httpTimeOut = 30000)
 public class Manhua extends BaseSeimiCrawler {
+
     @Value("${seimiAgentHost}")
     private String seimiAgentHost;
 
@@ -37,12 +44,16 @@ public class Manhua extends BaseSeimiCrawler {
     public void start(Response response) {
         JXDocument doc = response.document();
         try {
-            List<Object> urls = doc.sel("//div[@id='mhnew']/li/a/@href");
+            List<Object> urls = doc.sel("//div[@id='box1']/li/a");
             logger.info("{}", urls.size());
             for (Object s : urls) {
-                push(Request.build("http://"+s.toString().split("//")[1], "renderBean")
-                        .useSeimiAgent()
-                        .setSeimiAgentRenderTime(5000));
+                Element e = (Element) s;
+                String comicName = e.childNode(0).toString();
+                String basicId = "basicId_____";
+                String url = "http://"+e.attr("href").split("//")[1];
+                Map map = new HashMap();
+                map.put("basicId",basicId);
+                push(Request.build(url, "renderBean").setParams(map));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -50,6 +61,9 @@ public class Manhua extends BaseSeimiCrawler {
     }
 
     public void renderBean(Response response) {
+        String url = response.getUrl();
+        String realUrl = response.getRealUrl();
+        Map<String,String> params = HttpUtil.getParams(realUrl);
         try {
             JXDocument doc = response.document();
             System.out.println(doc.sel("//div[@id='mhimg0']/a/img/@src"));

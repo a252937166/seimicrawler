@@ -3,39 +3,34 @@
 <mapper namespace="com.ouyang.dao.ComicContentMapper" >
   <resultMap id="BaseResultMap" type="com.ouyang.model.ComicContent" >
     <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="basic_id" property="basicId" jdbcType="VARCHAR" />
+    <result column="chapter_id" property="chapterId" jdbcType="VARCHAR" />
     <result column="img_url" property="imgUrl" jdbcType="VARCHAR" />
     <result column="page_no" property="pageNo" jdbcType="INTEGER" />
-    <result column="comic_name" property="comicName" jdbcType="VARCHAR" />
-    <result column="chapter" property="chapter" jdbcType="INTEGER" />
     <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
     <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
     <result column="version" property="version" jdbcType="INTEGER" />
     <result column="status" property="status" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, basic_id, img_url, page_no, comic_name, chapter, create_date, update_date, version, 
-    status
+    id, chapter_id, img_url, page_no, create_date, update_date, version, status
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from comic_content
-    where 1=1 AND status=1 AND id = #{id,jdbcType=INTEGER}
+    where 1=1 AND status = 1 AND id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from comic_content
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.ouyang.model.ComicContent" >
-    insert into comic_content (id, basic_id, img_url, 
-      page_no, comic_name, chapter, 
-      create_date, update_date, version, 
-      status)
-    values (#{id,jdbcType=INTEGER}, #{basicId,jdbcType=VARCHAR}, #{imgUrl,jdbcType=VARCHAR}, 
-      #{pageNo,jdbcType=INTEGER}, #{comicName,jdbcType=VARCHAR}, #{chapter,jdbcType=INTEGER}, 
-      #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}, #{version,jdbcType=INTEGER}, 
-      #{status,jdbcType=INTEGER})
+    insert into comic_content (id, chapter_id, img_url, 
+      page_no, create_date, update_date, 
+      version, status)
+    values (#{id,jdbcType=INTEGER}, #{chapterId,jdbcType=VARCHAR}, #{imgUrl,jdbcType=VARCHAR}, 
+      #{pageNo,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}, 
+      #{version,jdbcType=INTEGER}, #{status,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.ouyang.model.ComicContent" >
     insert into comic_content
@@ -43,20 +38,14 @@
       <if test="id != null" >
         id,
       </if>
-      <if test="basicId != null" >
-        basic_id,
+      <if test="chapterId != null" >
+        chapter_id,
       </if>
       <if test="imgUrl != null" >
         img_url,
       </if>
       <if test="pageNo != null" >
         page_no,
-      </if>
-      <if test="comicName != null" >
-        comic_name,
-      </if>
-      <if test="chapter != null" >
-        chapter,
       </if>
       <if test="createDate != null" >
         create_date,
@@ -75,20 +64,14 @@
       <if test="id != null" >
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="basicId != null" >
-        #{basicId,jdbcType=VARCHAR},
+      <if test="chapterId != null" >
+        #{chapterId,jdbcType=VARCHAR},
       </if>
       <if test="imgUrl != null" >
         #{imgUrl,jdbcType=VARCHAR},
       </if>
       <if test="pageNo != null" >
         #{pageNo,jdbcType=INTEGER},
-      </if>
-      <if test="comicName != null" >
-        #{comicName,jdbcType=VARCHAR},
-      </if>
-      <if test="chapter != null" >
-        #{chapter,jdbcType=INTEGER},
       </if>
       <if test="createDate != null" >
         #{createDate,jdbcType=TIMESTAMP},
@@ -107,20 +90,14 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.ouyang.model.ComicContent" >
     update comic_content
     <set >
-      <if test="basicId != null" >
-        basic_id = #{basicId,jdbcType=VARCHAR},
+      <if test="chapterId != null" >
+        chapter_id = #{chapterId,jdbcType=VARCHAR},
       </if>
       <if test="imgUrl != null" >
         img_url = #{imgUrl,jdbcType=VARCHAR},
       </if>
       <if test="pageNo != null" >
         page_no = #{pageNo,jdbcType=INTEGER},
-      </if>
-      <if test="comicName != null" >
-        comic_name = #{comicName,jdbcType=VARCHAR},
-      </if>
-      <if test="chapter != null" >
-        chapter = #{chapter,jdbcType=INTEGER},
       </if>
       <if test="createDate != null" >
         create_date = #{createDate,jdbcType=TIMESTAMP},
@@ -139,11 +116,9 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.ouyang.model.ComicContent" >
     update comic_content
-    set basic_id = #{basicId,jdbcType=VARCHAR},
+    set chapter_id = #{chapterId,jdbcType=VARCHAR},
       img_url = #{imgUrl,jdbcType=VARCHAR},
       page_no = #{pageNo,jdbcType=INTEGER},
-      comic_name = #{comicName,jdbcType=VARCHAR},
-      chapter = #{chapter,jdbcType=INTEGER},
       create_date = #{createDate,jdbcType=TIMESTAMP},
       update_date = #{updateDate,jdbcType=TIMESTAMP},
       version = #{version,jdbcType=INTEGER},

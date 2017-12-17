@@ -74,7 +74,14 @@
 			<artifactId>mybatis</artifactId>
 			<version>3.4.1</version>
 		</dependency>
-     </dependencies>
+
+		<!--七牛-->
+		<dependency>
+			<groupId>com.qiniu</groupId>
+			<artifactId>qiniu-java-sdk</artifactId>
+			<version>7.2.4</version>
+		</dependency>
+    </dependencies>
 	<build>
 		<plugins>
 			<plugin>

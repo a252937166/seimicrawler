@@ -6,7 +6,9 @@ import cn.wanghaomiao.seimi.struct.Request;
 import cn.wanghaomiao.seimi.struct.Response;
 import cn.wanghaomiao.xpath.model.JXDocument;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 汪浩淼 [et.tw@163.com]
@@ -26,8 +28,10 @@ public class Basic extends BaseSeimiCrawler {
         try {
             List<Object> urls = doc.sel("//a[@class='titlelnk']/@href");
             logger.info("{}", urls.size());
+            Map map = new HashMap();
+            map.put("ddd","aaa");
             for (Object s:urls){
-                push(new Request(s.toString(),"getTitle"));
+                push(new Request(s.toString(),"getTitle").setParams(map));
             }
         } catch (Exception e) {
             e.printStackTrace();

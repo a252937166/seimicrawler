@@ -10,15 +10,17 @@
     <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
     <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
     <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="introduction" property="introduction" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, name, author, check_num, serialize_status, create_date, update_date, status
+    id, name, author, check_num, serialize_status, create_date, update_date, status, 
+    introduction
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from comic_basic
-    where 1=1 AND status=1 AND id = #{id,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from comic_basic
@@ -27,10 +29,12 @@
   <insert id="insert" parameterType="com.ouyang.model.ComicBasic" >
     insert into comic_basic (id, name, author, 
       check_num, serialize_status, create_date, 
-      update_date, status)
+      update_date, status, introduction
+      )
     values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{author,jdbcType=VARCHAR}, 
       #{checkNum,jdbcType=INTEGER}, #{serializeStatus,jdbcType=TINYINT}, #{createDate,jdbcType=TIMESTAMP}, 
-      #{updateDate,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER})
+      #{updateDate,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, #{introduction,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.ouyang.model.ComicBasic" >
     insert into comic_basic
@@ -59,6 +63,9 @@
       <if test="status != null" >
         status,
       </if>
+      <if test="introduction != null" >
+        introduction,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -84,6 +91,9 @@
       </if>
       <if test="status != null" >
         #{status,jdbcType=INTEGER},
+      </if>
+      <if test="introduction != null" >
+        #{introduction,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -111,6 +121,9 @@
       <if test="status != null" >
         status = #{status,jdbcType=INTEGER},
       </if>
+      <if test="introduction != null" >
+        introduction = #{introduction,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
@@ -122,7 +135,8 @@
       serialize_status = #{serializeStatus,jdbcType=TINYINT},
       create_date = #{createDate,jdbcType=TIMESTAMP},
       update_date = #{updateDate,jdbcType=TIMESTAMP},
-      status = #{status,jdbcType=INTEGER}
+      status = #{status,jdbcType=INTEGER},
+      introduction = #{introduction,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

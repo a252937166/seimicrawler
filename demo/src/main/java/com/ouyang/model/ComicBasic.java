@@ -19,6 +19,8 @@ public class ComicBasic {
 
     private Integer status;
 
+    private String introduction;
+
     public String getId() {
         return id;
     }
@@ -81,5 +83,13 @@ public class ComicBasic {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public String getIntroduction() {
+        return introduction;
+    }
+
+    public void setIntroduction(String introduction) {
+        this.introduction = introduction == null ? null : introduction.trim();
     }
 }

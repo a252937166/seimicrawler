@@ -5,15 +5,11 @@ import java.util.Date;
 public class ComicContent {
     private Integer id;
 
-    private String basicId;
+    private String chapterId;
 
     private String imgUrl;
 
     private Integer pageNo;
-
-    private String comicName;
-
-    private Integer chapter;
 
     private Date createDate;
 
@@ -31,12 +27,12 @@ public class ComicContent {
         this.id = id;
     }
 
-    public String getBasicId() {
-        return basicId;
+    public String getChapterId() {
+        return chapterId;
     }
 
-    public void setBasicId(String basicId) {
-        this.basicId = basicId == null ? null : basicId.trim();
+    public void setChapterId(String chapterId) {
+        this.chapterId = chapterId == null ? null : chapterId.trim();
     }
 
     public String getImgUrl() {
@@ -53,22 +49,6 @@ public class ComicContent {
 
     public void setPageNo(Integer pageNo) {
         this.pageNo = pageNo;
-    }
-
-    public String getComicName() {
-        return comicName;
-    }
-
-    public void setComicName(String comicName) {
-        this.comicName = comicName == null ? null : comicName.trim();
-    }
-
-    public Integer getChapter() {
-        return chapter;
-    }
-
-    public void setChapter(Integer chapter) {
-        this.chapter = chapter;
     }
 
     public Date getCreateDate() {
