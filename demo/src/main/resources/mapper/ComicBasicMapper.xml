@@ -139,4 +139,73 @@
       introduction = #{introduction,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
+
+  <select id="selectList" resultType="com.ouyang.model.ComicBasic" parameterType="com.ouyang.model.ComicBasic">
+    SELECT
+      <include refid="Base_Column_List" />
+    FROM comic_basic
+    WHERE 1=1
+    <if test="name != null" >
+      AND name = #{name,jdbcType=VARCHAR}
+    </if>
+    <if test="author != null" >
+      AND author = #{author,jdbcType=VARCHAR}
+    </if>
+    <if test="checkNum != null" >
+      AND check_num = #{checkNum,jdbcType=INTEGER}
+    </if>
+    <if test="serializeStatus != null" >
+      AND serialize_status = #{serializeStatus,jdbcType=TINYINT}
+    </if>
+    <if test="createDate != null" >
+      AND create_date = #{createDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="updateDate != null" >
+      AND update_date = #{updateDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="status != null" >
+      AND status = #{status,jdbcType=INTEGER}
+    </if>
+    <if test="introduction != null" >
+      AND introduction = #{introduction,jdbcType=VARCHAR}
+    </if>
+    <if test="status == null" >
+      AND status = 1
+    </if>
+  </select>
+
+  <select id="select" resultType="com.ouyang.model.ComicBasic">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM comic_basic
+    WHERE 1=1
+    <if test="name != null" >
+      AND name = #{name,jdbcType=VARCHAR}
+    </if>
+    <if test="author != null" >
+      AND author = #{author,jdbcType=VARCHAR}
+    </if>
+    <if test="checkNum != null" >
+      AND check_num = #{checkNum,jdbcType=INTEGER}
+    </if>
+    <if test="serializeStatus != null" >
+      AND serialize_status = #{serializeStatus,jdbcType=TINYINT}
+    </if>
+    <if test="createDate != null" >
+      AND create_date = #{createDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="updateDate != null" >
+      AND update_date = #{updateDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="status != null" >
+      AND status = #{status,jdbcType=INTEGER}
+    </if>
+    <if test="introduction != null" >
+      AND introduction = #{introduction,jdbcType=VARCHAR}
+    </if>
+    <if test="status == null" >
+      AND status = 1
+    </if>
+    LIMIT 1
+  </select>
 </mapper>

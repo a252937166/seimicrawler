@@ -1,12 +1,15 @@
 package com.ouyang.dao;
 
 import com.ouyang.model.ComicContent;
+import org.apache.ibatis.annotations.Options;
 
 public interface ComicContentMapper {
     int deleteByPrimaryKey(Integer id);
 
+    @Options(useGeneratedKeys = true)
     int insert(ComicContent record);
 
+    @Options(useGeneratedKeys = true)
     int insertSelective(ComicContent record);
 
     ComicContent selectByPrimaryKey(Integer id);

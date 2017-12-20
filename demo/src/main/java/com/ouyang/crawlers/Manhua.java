@@ -5,18 +5,22 @@ import cn.wanghaomiao.seimi.def.BaseSeimiCrawler;
 import cn.wanghaomiao.seimi.struct.Request;
 import cn.wanghaomiao.seimi.struct.Response;
 import cn.wanghaomiao.xpath.model.JXDocument;
+import com.ouyang.dao.ComicBasicMapper;
+import com.ouyang.model.ComicBasic;
+import com.ouyang.service.ComicBasicService;
 import com.ouyang.util.HttpUtil;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
-import javax.naming.ldap.PagedResultsControl;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Crawler(name = "manhua",httpTimeOut = 30000)
 public class Manhua extends BaseSeimiCrawler {
+    @Autowired
+    ComicBasicService comicBasicService;
 
     @Value("${seimiAgentHost}")
     private String seimiAgentHost;
@@ -49,18 +53,33 @@ public class Manhua extends BaseSeimiCrawler {
             for (Object s : urls) {
                 Element e = (Element) s;
                 String comicName = e.childNode(0).toString();
-                String basicId = "basicId_____";
-                String url = "http://"+e.attr("href").split("//")[1];
-                Map map = new HashMap();
-                map.put("basicId",basicId);
-                push(Request.build(url, "renderBean").setParams(map));
+                String basicId = comicBasicService.getIdByName(comicName);
+                String chapterUrl = "http://"+e.attr("href").split("//")[1];
+                Map<String, String> params = new HashMap<>();
+                params.put("basicId",basicId);
+                params.put("comicName",comicName);
+                push(Request.build(chapterUrl, "chapterBean").setParams(params));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void renderBean(Response response) {
+    public void chapterBean(Response response) {
+        String url = response.getUrl();
+        String realUrl = response.getRealUrl();
+        String basicId = HttpUtil.getParams(realUrl).get("basicId");
+        String comicName = HttpUtil.getParams(realUrl).get("comicName");
+        try {
+            JXDocument doc = response.document();
+            System.out.println(doc.sel("//div[@id='mhimg0']/a/img/@src"));
+            //使用神器paoding-jade存储到DB
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void contentBean(Response response) {
         String url = response.getUrl();
         String realUrl = response.getRealUrl();
         Map<String,String> params = HttpUtil.getParams(realUrl);

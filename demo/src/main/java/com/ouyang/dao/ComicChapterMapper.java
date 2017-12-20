@@ -14,4 +14,6 @@ public interface ComicChapterMapper {
     int updateByPrimaryKeySelective(ComicChapter record);
 
     int updateByPrimaryKey(ComicChapter record);
+
+    ComicChapter select(ComicChapter comicChapter);
 }

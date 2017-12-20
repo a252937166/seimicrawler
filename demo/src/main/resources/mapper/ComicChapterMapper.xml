@@ -90,4 +90,28 @@
       status = #{status,jdbcType=INTEGER}
     where id = #{id,jdbcType=VARCHAR}
   </update>
+
+  <select id="select" resultType="com.ouyang.model.ComicChapter">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM comic_chapter
+    WHERE 1=1
+    <if test="basicId != null" >
+     AND basic_id = #{basicId,jdbcType=VARCHAR}
+    </if>
+    <if test="name != null" >
+     AND name = #{name,jdbcType=VARCHAR}
+    </if>
+    <if test="chapterNo != null" >
+     AND chapter_no = #{chapterNo,jdbcType=INTEGER}
+    </if>
+    <if test="status != null" >
+     AND status = #{status,jdbcType=INTEGER}
+    </if>
+    <if test="status == null" >
+      AND status = 1
+    </if>
+    LIMIT 1
+  </select>
+
 </mapper>

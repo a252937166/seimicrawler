@@ -11,7 +11,7 @@ public class ComicBasic {
 
     private Integer checkNum;
 
-    private Byte serializeStatus;
+    private Integer serializeStatus;
 
     private Date createDate;
 
@@ -53,11 +53,11 @@ public class ComicBasic {
         this.checkNum = checkNum;
     }
 
-    public Byte getSerializeStatus() {
+    public Integer getSerializeStatus() {
         return serializeStatus;
     }
 
-    public void setSerializeStatus(Byte serializeStatus) {
+    public void setSerializeStatus(Integer serializeStatus) {
         this.serializeStatus = serializeStatus;
     }
 
