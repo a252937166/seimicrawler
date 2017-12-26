@@ -30,12 +30,11 @@ public class DemoInterceptor implements SeimiInterceptor {
 
     @Override
     public void before(Method method, Response response) {
-        logger.info("在这里我可以对这个reponse做些操作的，reponseHashCode = {}",response.hashCode());
-
+//        logger.info("在这里我可以对这个reponse做些操作的，reponseHashCode = {}",response.hashCode());
     }
 
     @Override
     public void after(Method method, Response response) {
-        logger.info("method={}.{} has done!",method.getDeclaringClass().getSimpleName(),method.getName());
+//        logger.info("method={}.{} has done!",method.getDeclaringClass().getSimpleName(),method.getName());
     }
 }

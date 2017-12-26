@@ -1,5 +1,8 @@
 package com.ouyang.util;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,7 +41,7 @@ public class HttpUtil {
     String strAllParam=null;
       String[] arrSplit=null;
      
-      strURL=strURL.trim().toLowerCase();
+      strURL=strURL.trim();
      
       arrSplit=strURL.split("[?]");
       if(strURL.length()>1)
@@ -93,6 +96,24 @@ public class HttpUtil {
           }
     }   
     return mapRequest;   
+    }
+
+    public static String paramEncode(String param) {
+        try {
+            return URLEncoder.encode(param,"utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String paramDecode(String param) {
+        try {
+            return URLDecoder.decode(param,"utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
    
 }
