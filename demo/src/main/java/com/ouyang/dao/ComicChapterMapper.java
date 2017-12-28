@@ -1,6 +1,7 @@
 package com.ouyang.dao;
 
 import com.ouyang.model.ComicChapter;
+import org.apache.ibatis.annotations.Param;
 
 public interface ComicChapterMapper {
     int deleteByPrimaryKey(String id);
@@ -16,4 +17,6 @@ public interface ComicChapterMapper {
     int updateByPrimaryKey(ComicChapter record);
 
     ComicChapter select(ComicChapter comicChapter);
+
+    String getIdByName(@Param("name") String name);
 }

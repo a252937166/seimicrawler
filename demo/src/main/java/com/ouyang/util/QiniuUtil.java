@@ -9,28 +9,33 @@ import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.Random;
 
 /**
  * Created by Ouyang on 2017/7/6.
  */
+@Component
 public class QiniuUtil {
 
     @Value("${qiniu_ak}")
-    private static String AK;
+    private String AK;
 
     @Value("${qiniu_sk}")
-    private static String SK;
+    private String SK;
 
     @Value("${qiniu_bucket}")
-    private static String BUCKET;
+    private String BUCKET;
 
     @Value("${qiniu_cdn}")
-    private static String CDN;
+    private String CDN;
 
-    public static String uploadImg(MultipartFile file) {
+    public String uploadImg(MultipartFile file) {
         //构造一个带指定Zone对象的配置类
         Configuration cfg = new Configuration(Zone.zone2());
         //...其他参数参考类注释
@@ -60,7 +65,7 @@ public class QiniuUtil {
         return putRet!=null?putRet.key:null;
     }
 
-    public static String uploadImg(String fileName,byte[] fileBytes) {
+    public String uploadImg(String fileName,byte[] fileBytes) {
         //构造一个带指定Zone对象的配置类
         Configuration cfg = new Configuration(Zone.zone2());
         //...其他参数参考类注释
@@ -87,13 +92,26 @@ public class QiniuUtil {
         return putRet!=null?putRet.key:null;
     }
 
-    public static String uploadImg(String fileName,String imgUrl) {
+    public String uploadImg(String fileName,String imgUrl) {
         byte[] fileBytes = Http.getImageBytes(imgUrl);
         return uploadImg(fileName,fileBytes);
     }
 
+    public String getPrivateImage(String fileName) throws UnsupportedEncodingException {
+        if (new Random().nextBoolean()) {
+            fileName = fileName+"-info";
+        } else {
+            fileName = fileName+"-blog";
+        }
+        String encodedFileName = URLEncoder.encode(fileName, "utf-8");
+        String publicUrl = String.format("%s/%s", CDN, encodedFileName);
+        Auth auth = Auth.create(AK, SK);
+        long expireInSeconds = 3600;//1小时，可以自定义链接过期时间
+        return auth.privateDownloadUrl(publicUrl, expireInSeconds);
+    }
 
-    public static String getImgUrl(String key) {
+
+    public String getImgUrl(String key) {
         return CDN+"/"+key;
     }
 }

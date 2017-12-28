@@ -1,9 +1,10 @@
 package com.ouyang.main;
 
-import com.ouyang.util.UUIDUtil;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.qiniu.util.Auth;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 /**
  * Package: com.ouyang.main
@@ -12,20 +13,16 @@ import java.util.regex.Pattern;
  * @Date: 2017/12/18
  */
 public class Test {
-    public static void main(String[] args) {
-        String a = "火影忍者303话[佐井的背叛]";
-        Pattern pattern = Pattern.compile("^火影忍者(\\d+)话");
-        Pattern pattern1 = Pattern.compile("\\[(.+)\\]");
-        Matcher matcher = pattern.matcher(a);
-        Matcher matcher2 = pattern1.matcher(a);
-        if (matcher.find()) {
-            System.out.println(Integer.valueOf(matcher.group(1)));
-        }
-        if (matcher2.find()) {
-            System.out.println(matcher2.group(1));
-        }
-//        System.out.println(matcher2.replaceAll(""));
-        System.out.println(UUIDUtil.getId());
-        System.out.println(UUIDUtil.getId());
+    public static void main(String[] args) throws UnsupportedEncodingException {
+        String fileName = "null第1页.jpg-blog";
+        String domainOfBucket = "https://comic.ouyanglol.com/bbbb";
+        String encodedFileName = URLEncoder.encode(fileName, "utf-8");
+        String publicUrl = String.format("%s/%s", domainOfBucket, encodedFileName);
+        String accessKey = "0j0DJNycJ8YTqLlgh22aKM57vfeAnfsuQy8ZrBDP";
+        String secretKey = "_mj_dSZo93IGCjZ3JpusTNGWDMjfslfgZFWhnNSw";
+        Auth auth = Auth.create(accessKey, secretKey);
+        long expireInSeconds = 3600;//1小时，可以自定义链接过期时间
+        String finalUrl = auth.privateDownloadUrl(publicUrl, expireInSeconds);
+        System.out.println(domainOfBucket.substring(0,domainOfBucket.lastIndexOf("/")));
     }
 }

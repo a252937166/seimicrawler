@@ -157,4 +157,11 @@
     LIMIT 1
   </select>
 
+  <select id="getIdByName" resultType="java.lang.String">
+    SELECT id
+    FROM comic_chapter
+    WHERE name = #{name}
+    limit 1
+  </select>
+
 </mapper>

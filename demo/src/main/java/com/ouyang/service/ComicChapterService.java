@@ -3,6 +3,7 @@ package com.ouyang.service;
 import com.ouyang.dao.ComicChapterMapper;
 import com.ouyang.model.ComicChapter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -30,5 +31,10 @@ public class ComicChapterService {
 
     public ComicChapter select(ComicChapter comicChapter) {
         return comicChapterMapper.select(comicChapter);
+    }
+
+    @Cacheable(value = "getChapterIdByName",key = "#name")
+    public String getChapterIdByName(String name) {
+        return comicChapterMapper.getIdByName(name);
     }
 }
