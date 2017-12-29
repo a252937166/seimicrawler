@@ -107,7 +107,8 @@ public class QiniuUtil {
         String publicUrl = String.format("%s/%s", CDN, encodedFileName);
         Auth auth = Auth.create(AK, SK);
         long expireInSeconds = 3600;//1小时，可以自定义链接过期时间
-        return auth.privateDownloadUrl(publicUrl, expireInSeconds);
+        String privateUrl = auth.privateDownloadUrl(publicUrl, expireInSeconds);
+        return privateUrl;
     }
 
 

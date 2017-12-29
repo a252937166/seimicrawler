@@ -17,15 +17,12 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.springframework.util.SerializationUtils;
 
-import javax.imageio.ImageIO;
 import javax.net.ssl.SSLContext;
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.net.*;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
@@ -240,32 +237,67 @@ public class Http {
 	}
 
 	public static byte[] getImageBytes(String imgUrl) {
-		ByteArrayOutputStream baos = null;
+		log.info("getImageBytes::begin");
+		byte[] data = null;
+		InputStream is = null;
+		HttpURLConnection conn = null;
 		try {
-			URL u = new URL(imgUrl);
-			BufferedImage image = ImageIO.read(u);
-
-			//convert BufferedImage to byte array
-			baos = new ByteArrayOutputStream();
-			ImageIO.write( image, "jpg", baos);
-			baos.flush();
-
-			return baos.toByteArray();
-		}
-		catch (Exception e)
-		{
-			return null;
-		}
-		finally
-		{
-			if(baos != null)
-			{
-				try {
-					baos.close();
-				} catch (IOException e) {
-				}
+			log.info(imgUrl);
+			URL url = new URL(imgUrl);
+			conn = (HttpURLConnection) url.openConnection();
+			conn.setDoInput(true);
+			// conn.setDoOutput(true);
+			conn.setRequestMethod("GET");
+			conn.setConnectTimeout(6000);
+			is = conn.getInputStream();
+			if (conn.getResponseCode() == 200) {
+				data = readInputStream(is);
+			} else{
+				data=null;
 			}
+		} catch (MalformedURLException e) {
+			log.info("getImageBytes::error"+e.getMessage());
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+			log.info("getImageBytes::error"+e.getMessage());
+		} finally {
+			try {
+				if(is != null){
+					is.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+				log.info("getImageBytes::error"+e.getMessage());
+			}
+			conn.disconnect();
 		}
+		log.info("getImageBytes::finish");
+		return data;
+	}
+
+	public static byte[] readInputStream(InputStream is) {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		byte[] buffer = new byte[1024];
+		int length = -1;
+		try {
+			while ((length = is.read(buffer)) != -1) {
+				baos.write(buffer, 0, length);
+			}
+			baos.flush();
+		} catch (IOException e) {
+			log.info("getImageBytes::error"+e.getMessage());
+			e.printStackTrace();
+		}
+		byte[] data = baos.toByteArray();
+		try {
+			is.close();
+			baos.close();
+		} catch (IOException e) {
+			log.info("getImageBytes::error"+e.getMessage());
+			e.printStackTrace();
+		}
+		return data;
 	}
 
 	public class HttpResult{
