@@ -2,6 +2,10 @@ package com.ouyang.util;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.sun.imageio.plugins.bmp.BMPImageReader;
+import com.sun.imageio.plugins.gif.GIFImageReader;
+import com.sun.imageio.plugins.jpeg.JPEGImageReader;
+import com.sun.imageio.plugins.png.PNGImageReader;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.*;
@@ -17,18 +21,15 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.springframework.util.SerializationUtils;
 
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.MemoryCacheImageInputStream;
 import javax.net.ssl.SSLContext;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.*;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 /**
@@ -299,6 +300,46 @@ public class Http {
 		}
 		return data;
 	}
+
+    public static String getImgeType(byte[] mapObj) throws IOException
+    {
+        String type = "";
+        ByteArrayInputStream bais = null;
+        MemoryCacheImageInputStream mcis = null;
+        try {
+            bais = new ByteArrayInputStream(mapObj);
+            mcis = new MemoryCacheImageInputStream(bais);
+            Iterator itr = ImageIO.getImageReaders(mcis);
+            while (itr.hasNext()) {
+                ImageReader reader = (ImageReader)itr.next();
+                if (reader instanceof GIFImageReader)
+                    type = "gif";
+                else if (reader instanceof JPEGImageReader)
+                    type = "jpg";
+                else if (reader instanceof PNGImageReader)
+                    type = "png";
+                else if (reader instanceof BMPImageReader)
+                    type = "bmp";
+            }
+        }
+        finally {
+            if (bais != null)
+                try {
+                    bais.close();
+                }
+                catch (IOException ioe)
+                {
+                }
+            if (mcis != null)
+                try {
+                    mcis.close();
+                }
+                catch (IOException ioe)
+                {
+                }
+        }
+        return type;
+    }
 
 	public class HttpResult{
 		
