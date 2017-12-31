@@ -5,14 +5,13 @@ import cn.wanghaomiao.seimi.def.BaseSeimiCrawler;
 import cn.wanghaomiao.seimi.struct.Request;
 import cn.wanghaomiao.seimi.struct.Response;
 import cn.wanghaomiao.xpath.model.JXDocument;
-import com.ouyang.dao.ComicBasicMapper;
-import com.ouyang.dao.ComicChapterMapper;
-import com.ouyang.model.ComicBasic;
 import com.ouyang.model.ComicChapter;
 import com.ouyang.model.ComicContent;
+import com.ouyang.model.ComicErrorContent;
 import com.ouyang.service.ComicBasicService;
 import com.ouyang.service.ComicChapterService;
 import com.ouyang.service.ComicContentService;
+import com.ouyang.service.ComicErrorContentService;
 import com.ouyang.util.Http;
 import com.ouyang.util.HttpUtil;
 import com.ouyang.util.QiniuUtil;
@@ -20,12 +19,13 @@ import com.ouyang.util.UUIDUtil;
 import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
+
 
 @Crawler(name = "manhua", httpTimeOut = 30000)
 public class Manhua extends BaseSeimiCrawler {
@@ -37,6 +37,8 @@ public class Manhua extends BaseSeimiCrawler {
     ComicContentService comicContentService;
     @Autowired
     QiniuUtil qiniuUtil;
+    @Autowired
+    ComicErrorContentService comicErrorContentService;
 
     @Value("${seimiAgentHost}")
     private String seimiAgentHost;
@@ -56,7 +58,7 @@ public class Manhua extends BaseSeimiCrawler {
 
     @Override
     public String[] startUrls() {
-        return new String []{"http://www.fzdm.com/"};
+        return new String[]{"http://www.fzdm.com/"};
     }
 
 
@@ -81,17 +83,31 @@ public class Manhua extends BaseSeimiCrawler {
 //            e.printStackTrace();
 //        }
 
-        //单章节
-        Map<String, String> param = new HashMap<>();
-        String contentUrl = "http://manhua.fzdm.com/1/Vol_002";
-        param.put("chapterName", HttpUtil.paramEncode("火影忍者第2卷"));
-        param.put("comicName", HttpUtil.paramEncode("火影忍者"));
-        push(Request.build(contentUrl, "contentBean")
-                .setMeta(param)
-                .useSeimiAgent()
-                .setSeimiAgentUseCookie(true)
-                .setSeimiAgentRenderTime(5000)
-        );
+//        //单章节
+//        Map<String, String> param = new HashMap<>();
+//        String contentUrl = "http://manhua.fzdm.com/1/Vol_002";
+//        param.put("chapterName", HttpUtil.paramEncode("火影忍者第2卷"));
+//        param.put("comicName", HttpUtil.paramEncode("火影忍者"));
+//        push(Request.build(contentUrl, "contentBean")
+//                .setMeta(param)
+//                .useSeimiAgent()
+//                .setSeimiAgentUseCookie(true)
+//                .setSeimiAgentRenderTime(5000)
+//        );
+
+        //单本漫画
+        try {
+            String comicName ="一拳超人";
+            String basicId = comicBasicService.getIdByName(comicName);
+            String chapterUrl = "http://manhua.fzdm.com/132/";
+            Map<String, String> params = new HashMap<>();
+            params.put("basicId", basicId);
+            params.put("comicName", comicName);
+            push(Request.build(chapterUrl, "chapterBean").setParams(params));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -136,8 +152,7 @@ public class Manhua extends BaseSeimiCrawler {
                 push(Request.build(contentUrl, "contentBean")
                         .setMeta(param)
                         .useSeimiAgent()
-                        .setSeimiAgentUseCookie(true)
-                        .setSeimiAgentRenderTime(5000)
+                        .setSeimiAgentRenderTime(6000)
                 );
             }
         } catch (Exception e) {
@@ -152,14 +167,23 @@ public class Manhua extends BaseSeimiCrawler {
         String comicName = HttpUtil.paramDecode(params.get("comicName"));
         try {
             JXDocument doc = response.document();
-            String imgUrl = (String) doc.sel("//img[@id='mhpic']/@src").get(0);
+            List<Object> imgUrlList = doc.sel("//img[@id='mhpic']/@src");
+            if (CollectionUtils.isEmpty(imgUrlList)) {
+                ComicErrorContent comicErrorContent = new ComicErrorContent();
+                comicErrorContent.setChapterId(chapterId);
+                comicErrorContent.setCreateDate(new Date());
+                comicErrorContent.setImgUrl(response.getUrl());
+                comicErrorContentService.insert(comicErrorContent);
+                return;
+            }
+            String imgUrl = (String) imgUrlList.get(0);
             List<Object> elements = doc.sel("//a[@id='mhona']");
-            Map<String,String> mhonaMap = new HashMap<>();
+            Map<String, String> mhonaMap = new HashMap<>();
             ComicContent comicContent = new ComicContent();
             for (Object e : elements) {
                 Element element = (Element) e;
                 String text = element.childNode(0).toString();
-                mhonaMap.put(text,element.attr("href"));
+                mhonaMap.put(text, element.attr("href"));
                 Pattern pageNumberPattern = Pattern.compile("第(\\d+)页");
                 Matcher pageNumberMatcher = pageNumberPattern.matcher(text);
                 if (pageNumberMatcher.find()) {
@@ -175,26 +199,25 @@ public class Manhua extends BaseSeimiCrawler {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            String fileName = comicName + "/" + chapterName + "/" + comicContent.getPageNo()+"."+imgType;
+            String fileName = comicName + "/" + chapterName + "/" + comicContent.getPageNo() + "." + imgType;
             comicContent.setImgUrl(qiniuUtil.getPrivateImage(qiniuUtil.uploadImg(fileName, fileBytes)));
             comicContent.setFileName(fileName);
             comicContent.setUpdateDate(new Date());
             comicContentService.insert(comicContent);
-            System.out.println(fileName+"::"+comicContent.getImgUrl());
+            System.out.println(fileName + "::" + comicContent.getImgUrl());
             if (mhonaMap.containsKey("下一页")) {
                 Map<String, String> param = new HashMap<>();
                 String currentUrl = response.getUrl();
                 if (currentUrl.endsWith("html")) {
-                    currentUrl = currentUrl.substring(0,currentUrl.lastIndexOf("/"));
+                    currentUrl = currentUrl.substring(0, currentUrl.lastIndexOf("/"));
                 }
-                String contentUrl = currentUrl+"/"+mhonaMap.get("下一页");
+                String contentUrl = currentUrl + "/" + mhonaMap.get("下一页");
                 param.put("chapterName", HttpUtil.paramEncode(chapterName));
                 param.put("comicName", HttpUtil.paramEncode(comicName));
                 push(Request.build(contentUrl, "contentBean")
                         .setMeta(param)
                         .useSeimiAgent()
-                        .setSeimiAgentUseCookie(true)
-                        .setSeimiAgentRenderTime(5000)
+                        .setSeimiAgentRenderTime(6000)
                 );
             }
         } catch (Exception e) {
