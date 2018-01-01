@@ -42,7 +42,7 @@ public class SeimiAgentDemo extends BaseSeimiCrawler{
 
     @Override
     public void start(Response response) {
-        Request seimiAgentReq = Request.build("https://www.souyidai.com","getTotalTransactions")
+        Request seimiAgentReq = Request.build("http://manhua.fzdm.com/2/889/","getHtml")
                 .useSeimiAgent()
 //                告诉SeimiAgent针对这个请求是否使用cookie，如果没有设置使用当前Crawler关于cookie使用条件作为默认值。
 //                .setSeimiAgentUseCookie(true)
@@ -52,14 +52,12 @@ public class SeimiAgentDemo extends BaseSeimiCrawler{
     }
 
     /**
-     * 获取搜易贷首页总成交额
+     * 打印网页信息
      * @param response
      */
-    public void getTotalTransactions(Response response){
-        JXDocument doc = response.document();
+    public void getHtml(Response response){
         try {
-            String trans = StringUtils.join(doc.sel("//div[@class='homepage-amount']/div[@class='number font-arial']/div/span/text()"),"");
-            logger.info("Final Res:{}",trans);
+            System.out.println(response.getContent());
         } catch (Exception e) {
             e.printStackTrace();
         }
